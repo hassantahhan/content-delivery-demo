@@ -30,9 +30,9 @@ The design includes the follwing set of features:
 5. Click on the CloudFront distribution domain name to access all content of your website. The static content is avaialble under `/index.html` while the dynamic content is available under `/api`.  
 
 ## Test
-To test if the distribution is ready to be used in your region, you can use the `nslookup xxxxxxxxxxxx.cloudfront.net` command to lookup the CloudFront distribution domain name. You should be able to observe that CloudFront returns multiple IPs for each DNS query to increase application resiliency.
+To test if the distribution is ready to be used in your region, you can use the `nslookup xxxxxxxxxxxx.cloudfront.net` command to lookup the CloudFront distribution domain name. You should be able to observe that CloudFront returns multiple IPs for each DNS query.
 
-To check the average start transfer time of the demonstration application endpoint, you can use the commands below:
+To check the average start transfer time of the application endpoint, you can use the commands below:
 - For Windows:
 ```
 for /L %i in (1,1,10) do
