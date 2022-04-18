@@ -37,7 +37,7 @@ To check the average start transfer time of the application endpoint, you can us
 ```
 for /L %i in (1,1,10) do @echo %i && curl -s -o NUL --write-out "size_download: %{size_download} // time_total: %{time_total} // time_starttransfer: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net
 ```
-- For Linux bash command: 
+- Using Linux bash shell: 
 ```
 for i in `seq 1 10`; do echo $i; curl -s -o /dev/null --write-out "size_download: %{size_download} // time_total: %{time_total} // time_starttransfer: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net; done
 ```
