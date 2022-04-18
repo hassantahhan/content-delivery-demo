@@ -7,13 +7,13 @@ This repository demonstrates how to accelerate your static and dynamic web conte
 - [What is Amazon VPC?](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
 - [What is AWS CloudFormation?](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html)
 
-## High-Level Architecture
+## Architecture
 All web content is distributed using CloudFront to lower global user latency (the time it takes to load the first byte of the file) and achieve higher data transfer rates. The application content can be divided into two parts: static content hosted on S3 and dynamic content hosted on EC2. The static webpage is backed by a simple Express.js application that listens to HTTP requests and sends back a JSON response that includes the server timestamp and HTTP headers received in the request. CloudFront will forward GET and HEAD requests to origins, since that's all what the application requires, and exlude other HTTP methods, the query string, and any cookies in viewer requests. 
 
 ![Screenshot](architecture.jpg)
 
-## AWS Design Features
-The design includes the follwing set of features: 
+## AWS Design
+The AWS design includes the follwing set of features: 
 - The CloudFront distribution is configured to require HTTPS for communication between viewers and CloudFront. To avoid information exposure, CloudFront is configured with a custom error response behavior and `index.html` as the default root object. 
 - The S3 bucket is configured with Public Access Block and has its bucket policy restrict to Origin Access Identity for CloudFront.
 - The Application Load Balancer is configured across 3 Availability Zones with health checks on target groups. The Security Group of the Application Load Balance is restricted to AWS-managed prefix list for Amazon CloudFront using CloudFormation custom resources.
@@ -29,7 +29,7 @@ The design includes the follwing set of features:
 4. Go to the EC2 console to check if the EC2 instances created by CloudFormation finished initializing and entered the running state.  
 5. Click on the CloudFront distribution domain name to access all content of your website. The static content is avaialble under `/index.html` while the dynamic content is available under `/api`.  
 
-## Test
+## Testing
 To test if the distribution is ready to be used in your region, you can use the `nslookup xxxxxxxxxxxx.cloudfront.net` command to lookup the CloudFront distribution domain name. You should be able to observe that CloudFront returns multiple IPs for each DNS query.
 
 To check the average start transfer time of the application endpoint, you can use the commands below:
