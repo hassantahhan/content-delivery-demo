@@ -29,5 +29,12 @@ The design includes the follwing set of features:
 4. Go to the EC2 console to check if the EC2 instances created by CloudFormation finished initializing and entered the running state.  
 5. Click on the CloudFront distribution domain name to access all content of your website. The static content is avaialble under `/index.html` while the dynamic content is available under `/api`.  
 
+## Test
+To test if the distribution is ready to be used in your region, you can use the `nslookup xxxxxxxxxxxx.cloudfront.net` command to lookup the CloudFront distribution domain name. You should be able to observe that CloudFront returns multiple IPs for each DNS query to increase application resiliency.
+
+To check the average start transfer time of the demonstration application endpoint, you can use the commands below:
+- For Windows: `for /L %i in (1,1,10) do @echo %i && curl -s -o NUL --write-out "size_download: %{size_download} // time_total: %{time_total} // time_starttransfer: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net`
+- For Linux: `for i in `seq 1 10`; do echo $i; curl -s -o /dev/null --write-out "size_download: %{size_download} // time_total: %{time_total} // time_starttransfer: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net; done`
+
 ## Cost
 TDC
