@@ -14,7 +14,7 @@ All web content is distributed using CloudFront to lower global user latency (th
 
 ## AWS Design
 The AWS design includes the follwing set of features: 
-- The CloudFront distribution requires HTTPS for communication between viewers and CloudFront. To avoid information exposure, CloudFront is configured with a custom error response behavior and a default root object, `index.html`. CloudFront will forward GET and HEAD requests to origins, since that's all what the application requires, and exclude other HTTP methods, the query string, and any cookies in viewer requests. 
+- The CloudFront distribution requires HTTPS for communication between viewers and CloudFront. To avoid information exposure, CloudFront is configured with a custom error response behavior and a default root object, `index.html`. In addition, CloudFront forwards GET and HEAD requests to origins, since that's all what the application requires, but excludes other HTTP methods, the query string, and any cookies in viewer requests. 
 - The S3 bucket is configured with Public Access Block and has its bucket policy restrict to Origin Access Identity for CloudFront.
 - The Application Load Balancer is configured across 3 Availability Zones with health checks on target groups. The Security Group of the Application Load Balance is restricted to AWS-managed prefix list for Amazon CloudFront using CloudFormation custom resources.
 - The Auto Scaling Group is configured across 3 Availability Zones with a minimum size of 3 instances and maximum size of 9 instances. The Auto Scaling group triggers scaling when the average outbound network traffic from each instance is higher than 6 MiB or lower than 2 MiB over a period of five minutes. 
