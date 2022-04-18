@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="styles.css" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  </head>
+  <body>
+    <img src="logo.png" alt="Simple Logo" width="100%"  height="100%">
+    <hr>
+    <strong>AWS cloud high-level design:</strong>
+    <hr>
+    <img src="design.jpg" alt="Simple Architecture" width="100%"  height="100%">
+    <hr>
+    <strong>Server's echo of request headers:</strong>
+    <hr>
+    <table border="1" width="100%">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody id="tData"></tbody>
+      <script>
+        fetch("/api").then(function(response) {
+          return response.json();
+        }).then(function(data) {
+          appendData(data);
+        }).catch(function(err) {
+          console.log('error: ' + err);
+        });
+
+        function appendData(data) {
+          var root = document.getElementById('tData');
+          root.insertAdjacentHTML('beforebegin', `<tr><td>timestamp</td><td>${data.timestamp}</td><td>Server Timestamp - Not an actual header</td></tr>`);
+          Object.entries(data.headers).forEach(element => root.insertAdjacentHTML('beforebegin', `<tr><td>${element[0]}</td><td>${element[1]}</td><td></td></tr>`));
+
+          // expanding the notes of non-colored rows
+          document.querySelectorAll('table tbody tr').forEach(function(row) {
+    		    if (row.cells[0].innerHTML === "host") {
+    			    row.cells[2].innerHTML = "The Host request header specifies the host and port number of the server to which the request is being sent.";
+      			} else if (row.cells[0].innerHTML === "user-agent") {
+        			  row.cells[2].innerHTML = "A characteristic string that lets servers and network peers identify the application, operating system, vendor, and/or version of the requesting user agent.";
+            } else if (row.cells[0].innerHTML === "accept-language") {
+                row.cells[2].innerHTML = "This header  header indicates the natural language and locale that the client prefers.";
+            } else if (row.cells[0].innerHTML === "accept") {
+              row.cells[2].innerHTML = "This header indicates which content types, expressed as MIME types, the client is able to understand.";
+            } else if (row.cells[0].innerHTML === "accept-encoding") {
+                row.cells[2].innerHTML = "The Accept-Encoding request HTTP header indicates the content encoding (usually a compression algorithm) that the client can understand. The server uses content negotiation to select one of the proposals and informs the client of that choice with the Content-Encoding response header.";
+            } else if (row.cells[0].innerHTML === "referer") {
+              row.cells[2].innerHTML = "This header contains an absolute or partial address of the page that makes the request.";
+            } else if (row.cells[0].innerHTML === "sec-ch-ua") {
+                row.cells[2].innerHTML = "The Sec-CH-UA header provides the brand and significant version for each brand associated with the browser in a comma-separated list.";
+            } else if (row.cells[0].innerHTML === "sec-ch-ua-mobile") {
+              row.cells[2].innerHTML = "The Sec-CH-UA-Mobile user agent client hint request header indicates whether the browser is on a mobile device. It can also be used by a desktop browser to indicate a preference for a mobile user experience.";
+            } else if (row.cells[0].innerHTML === "sec-ch-ua-platform") {
+              row.cells[2].innerHTML = "The Sec-CH-UA-Platform user agent client hint request header provides the platform or operating system on which the user agent is running. For example: Windows or Android";
+            } else if (row.cells[0].innerHTML === "sec-fetch-site") {
+              row.cells[2].innerHTML = "The Sec-Fetch-Site fetch metadata request header indicates the relationship between a request initiator's origin and the origin of the requested resource.";
+            } else if (row.cells[0].innerHTML === "sec-fetch-mode") {
+              row.cells[2].innerHTML = "The Sec-Fetch-Mode fetch metadata request header indicates the mode of the request.";
+            } else if (row.cells[0].innerHTML === "sec-fetch-dest") {
+              row.cells[2].innerHTML = "The Sec-Fetch-Dest fetch metadata request header indicates the request's destination. That is the initiator of the original fetch request, which is where (and how) the fetched data will be used.";
+            }
+    		  })
+
+          // expanding the notes of colored rows
+    		  document.querySelectorAll('table tbody tr').forEach(function(row) {
+    		    if (row.cells[0].innerHTML === "x-amz-cf-id") {
+    			    row.style.color = "white";
+    			    row.cells[2].innerHTML = "A unique id for this request provided by CloudFront. If you refresh the webpage, you will see that how the request id is changing. It's useful to log it on your webserver in general. Additionally, this id will be sent back to every viewer request and sent to CloudFront access logs. If you need to debug any issue you can open a support ticket and provide them with the req id";
+      			} else if (row.cells[0].innerHTML === "x-amz-cf-pop") {
+      			  row.style.color = "white";
+      			  row.cells[2].innerHTML = "This header indicates the CloudFront edge location that served your request. Each edge location is identified by a three-letter code and an arbitrarily assigned number, for example, DFW3. The three-letter code typically corresponds with the International Air Transport Association airport code for an airport near the edge location.";
+            } else if (row.cells[0].innerHTML === "x-cache") {
+      			  row.style.color = "white";
+      			  row.cells[2].innerHTML = "This header indicates whether the request was a cache hit or a cache miss. Normally, for your html file, you will get a 'Hit from Cloudfront' value in the subsequent requests, but always 'Miss from CloudFront' for /api request since caching is disabled for this behavior.";
+            } else if (row.cells[0].innerHTML === "x-forwarded-for") {
+              row.style.color = "white";
+              row.cells[2].innerHTML = "This header  is automatically added and helps you identify the IP address of a client when you use an HTTP or HTTPS load balancer. To see the IP address of the client, use the X-Forwarded-For request header.";
+            } else if (row.cells[0].innerHTML === "x-forwarded-proto") {
+              row.style.color = "white";
+              row.cells[2].innerHTML = "This header helps you identify the protocol (HTTP or HTTPS) that a client used to connect to your load balancer.";
+            } else if (row.cells[0].innerHTML === "x-forwarded-port") {
+              row.style.color = "white";
+              row.cells[2].innerHTML = "This header helps you identify the destination port that the client used to connect to the load balancer.";
+            } else if (row.cells[0].innerHTML === "x-amzn-trace-id") {
+              row.style.color = "white";
+              row.cells[2].innerHTML = "This header is added by the Elastic Load Balancer when a request is recieved from a clientd header before sending the request to the target. You can use request tracing to track HTTP requests from clients to targets or other services.";
+            } else if (row.cells[0].innerHTML === "via") {
+      			  row.style.color = "white";
+      			  row.cells[2].innerHTML = "CloudFront sets the value to the following in the response to the viewer: http-version alphanumeric-string.cloudfront.net";
+            } else if (row.cells[0].innerHTML === "if-none-match") {
+      			  row.style.color = "white";
+      			  row.cells[2].innerHTML = "The If-None-Match HTTP request header makes the request conditional. For GET and HEAD methods, the server will return the requested resource, with a 200 status, only if it doesn't have an ETag matching the given ones. When the condition fails for GET and HEAD methods, then the server must return other codes HTTP status code 304 (Not Modified)...";
+            }
+    		  })
+        }
+      </script>
+      <tfoot></tfoot>
+    </table>
+    <hr>2022, Simple Property is awesome!
+  </body>
+</html>

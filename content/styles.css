@@ -1,0 +1,22 @@
+table {
+  width: 100%;
+  background-color: #62848c;
+  border-collapse: collapse;
+  border: 3px solid goldenrod;
+}
+
+thead th:nth-child(1) {
+  width: 20%;
+}
+
+thead th:nth-child(2) {
+  width: 50%;
+}
+
+thead th:nth-child(3) {
+  width: 30%;
+}
+
+td {
+  padding: 3px;
+}
