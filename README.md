@@ -33,7 +33,7 @@ The AWS design includes the follwing set of features:
 To test if the distribution is ready to be used in your region, you can use the `nslookup xxxxxxxxxxxx.cloudfront.net` command to lookup the CloudFront distribution domain name. You should be able to observe that CloudFront returns multiple IPs for each DNS query.
 
 To check the average start transfer time of the application endpoint, you can use the commands below:
-- Using Windows Command Prompt:
+- Using Windows command prompt:
 ```
 for /L %i in (1,1,10) do @echo %i && curl -s -o NUL --write-out "size_download: %{size_download} // time_total: %{time_total} // time_starttransfer: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net
 ```
