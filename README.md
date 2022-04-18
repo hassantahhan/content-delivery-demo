@@ -8,7 +8,7 @@ This repository demonstrates how to accelerate your static and dynamic web conte
 - [What is AWS CloudFormation?](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html)
 
 ## High-Level Architecture
-All web content is distributed using CloudFront to lower global user latency (the time it takes to load the first byte of the file) and achieve higher data transfer rates. The web content can be divided into two parts: static content hosted on S3 and dynamic content hosted on EC2. The static webpage is backed by a simple Express.js application that listens to HTTP requests and sends back a JSON response that includes the server timestamp and HTTP headers received in the request. CloudFront only needs to forward GET and HEAD requests; and exlude other HTTP methods, the query string, and any cookies in viewer requests. 
+All web content is distributed using CloudFront to lower global user latency (the time it takes to load the first byte of the file) and achieve higher data transfer rates. The web content can be divided into two parts: static content hosted on S3 and dynamic content hosted on EC2. The static webpage is backed by a simple Express.js application that listens to HTTP requests and sends back a JSON response that includes the server timestamp and HTTP headers received in the request. CloudFront will forward GET and HEAD requests to origins, and exlude other HTTP methods, the query string, and any cookies in viewer requests. 
 
 ![Screenshot](architecture.jpg)
 
