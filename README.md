@@ -8,13 +8,13 @@ This repository demonstrates how to accelerate your static and dynamic web conte
 - [What is AWS CloudFormation?](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html)
 
 ## Architecture
-All web content is distributed using CloudFront to lower global user latency (the time it takes to load the first byte of the file) and achieve higher data transfer rates. The application content can be divided into two parts: static content hosted on S3 and dynamic content hosted on EC2. The static webpage is backed by a simple Express.js application that listens to HTTP requests and sends back a JSON response that includes the server timestamp and HTTP headers received in the request. CloudFront will forward GET and HEAD requests to origins, since that's all what the application requires, and exlude other HTTP methods, the query string, and any cookies in viewer requests. 
+All web content is distributed using CloudFront to lower global user latency (the time it takes to load the first byte of the file) and achieve higher data transfer rates. The application content can be divided into two parts: static content hosted on S3 and dynamic content hosted on EC2. The static webpage is backed by a simple Express.js application that listens to HTTP requests and sends back a JSON response that includes the server timestamp and HTTP headers received in the request.
 
 ![Screenshot](architecture.jpg)
 
 ## AWS Design
 The AWS design includes the follwing set of features: 
-- The CloudFront distribution is configured to require HTTPS for communication between viewers and CloudFront. To avoid information exposure, CloudFront is configured with a custom error response behavior and `index.html` as the default root object. 
+- The CloudFront distribution requires HTTPS for communication between viewers and CloudFront. To avoid information exposure, CloudFront is configured with a custom error response behavior and a default root object, `index.html`. CloudFront will forward GET and HEAD requests to origins, since that's all what the application requires, and exclude other HTTP methods, the query string, and any cookies in viewer requests. 
 - The S3 bucket is configured with Public Access Block and has its bucket policy restrict to Origin Access Identity for CloudFront.
 - The Application Load Balancer is configured across 3 Availability Zones with health checks on target groups. The Security Group of the Application Load Balance is restricted to AWS-managed prefix list for Amazon CloudFront using CloudFormation custom resources.
 - The Auto Scaling Group is configured across 3 Availability Zones with a minimum size of 3 instances and maximum size of 9 instances. The Auto Scaling group triggers scaling when the average outbound network traffic from each instance is higher than 6 MiB or lower than 2 MiB over a period of five minutes. 
