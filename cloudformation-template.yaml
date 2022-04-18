@@ -179,6 +179,12 @@ Resources:
       SubnetId: !Ref PublicSubnet2
       RouteTableId: !Ref PublicRouteTable
 
+  PublicSubnetAssociation3:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet3
+      RouteTableId: !Ref PublicRouteTable
+
   EIP1:
    DependsOn: VPCGatewayAttachment
    Type: AWS::EC2::EIP
@@ -345,23 +351,23 @@ Resources:
   ELBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 30
+      HealthCheckEnabled: true
       HealthCheckPath: "/api"
       Port: 80
       Protocol: HTTP
       HealthCheckPort: "traffic-port"
       HealthCheckProtocol: "HTTP"
+      HealthCheckIntervalSeconds: 30
       HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
       TargetType: "instance"
       Matcher:
         HttpCode: '200'
-      HealthyThresholdCount: 2
       VpcId: !Ref VPC
-      HealthCheckEnabled: true
       TargetGroupAttributes:
       - Key: deregistration_delay.timeout_seconds
-        Value: '20'
+        Value: 30
 
   ELBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -426,6 +432,8 @@ Resources:
       DesiredCapacity: '3'
       TargetGroupARNs:
         - !Ref ELBTargetGroup
+      HealthCheckType: ELB
+      HealthCheckGracePeriod: 60
       Tags:
         - Key: Name
           Value: Demo EC2 Auto Scaling Group
@@ -437,53 +445,16 @@ Resources:
           Value: !Sub ${AWS::StackId}
           PropagateAtLaunch: "false"
 
-  EC2AutoScalingScaleDownPolicy:
+  EC2AutoScalingScalingPolicy:
     Type: AWS::AutoScaling::ScalingPolicy
     Properties:
-      ScalingAdjustment: -1
-      AdjustmentType: ChangeInCapacity
+      PolicyType: TargetTrackingScaling
       AutoScalingGroupName: !Ref EC2AutoScalingGroup
-
-  EC2AutoScalingScaleUpPolicy:
-    Type: AWS::AutoScaling::ScalingPolicy
-    Properties:
-      ScalingAdjustment: 1
-      AdjustmentType: ChangeInCapacity
-      AutoScalingGroupName: !Ref EC2AutoScalingGroup
-
-  EC2CloudwatchAlarmLow:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      AlarmDescription: Demo EC2 Auto Scaling Group Scale Down alarm
-      AlarmActions:
-      - Ref: EC2AutoScalingScaleDownPolicy
-      MetricName: NetworkOut
-      ComparisonOperator: GreaterThanThreshold
-      Statistic: Average
-      Period: 300
-      EvaluationPeriods: 1
-      Namespace: AWS/EC2
-      Threshold: 2000000
-      Dimensions:
-      - Name: AutoScalingGroupName
-        Value: !Ref EC2AutoScalingGroup
-
-  EC2CloudwatchAlarmHigh:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      AlarmDescription: "Demo EC2 Auto Scaling Group Scale Up alarm"
-      AlarmActions:
-      - Ref: EC2AutoScalingScaleUpPolicy
-      MetricName: NetworkOut
-      ComparisonOperator: GreaterThanThreshold
-      Statistic: Average
-      Period: 300
-      EvaluationPeriods: 1
-      Namespace: AWS/EC2
-      Threshold: 6000000
-      Dimensions:
-      - Name: AutoScalingGroupName
-        Value: !Ref EC2AutoScalingGroup
+      EstimatedInstanceWarmup: 300
+      TargetTrackingConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ASGAverageCPUUtilization
+        TargetValue: 70
 
   EC2LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
