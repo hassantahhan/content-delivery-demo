@@ -191,18 +191,6 @@ Resources:
    Properties:
       Domain: vpc
 
-  EIP2:
-   DependsOn: VPCGatewayAttachment
-   Type: AWS::EC2::EIP
-   Properties:
-      Domain: vpc
-
-  EIP3:
-   DependsOn: VPCGatewayAttachment
-   Type: AWS::EC2::EIP
-   Properties:
-      Domain: vpc
-
   NATGateway1:
     Type: AWS::EC2::NatGateway
     Properties:
@@ -214,41 +202,7 @@ Resources:
         Ref: PublicSubnet1
       Tags:
         - Key: Name
-          Value: Demo NAT Gateway 1
-        - Key: StackName
-          Value: !Sub ${AWS::StackName}
-        - Key: StackId
-          Value: !Sub ${AWS::StackId}
-
-  NATGateway2:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      AllocationId:
-        Fn::GetAtt:
-        - EIP2
-        - AllocationId
-      SubnetId:
-        Ref: PublicSubnet2
-      Tags:
-        - Key: Name
-          Value: Demo NAT Gateway 2
-        - Key: StackName
-          Value: !Sub ${AWS::StackName}
-        - Key: StackId
-          Value: !Sub ${AWS::StackId}
-
-  NATGateway3:
-    Type: AWS::EC2::NatGateway
-    Properties:
-      AllocationId:
-        Fn::GetAtt:
-          - EIP3
-          - AllocationId
-      SubnetId:
-        Ref: PublicSubnet3
-      Tags:
-        - Key: Name
-          Value: Demo NAT Gateway 3
+          Value: Demo NAT Gateway
         - Key: StackName
           Value: !Sub ${AWS::StackName}
         - Key: StackId
@@ -320,14 +274,14 @@ Resources:
     Properties:
       RouteTableId: !Ref PrivateRouteTable2
       DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref NATGateway2
+      NatGatewayId: !Ref NATGateway1
 
   PrivateRoute3:
     Type: AWS::EC2::Route
     Properties:
       RouteTableId: !Ref PrivateRouteTable3
       DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref NATGateway3
+      NatGatewayId: !Ref NATGateway1
 
   ELBApplicationLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
