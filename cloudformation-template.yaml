@@ -213,12 +213,12 @@ Resources:
       SubnetId:
         Ref: PublicSubnet1
       Tags:
-      - Key: Name
-        Value: Demo NAT Gateway 1
-      - Key: StackName
-        Value: !Sub ${AWS::StackName}
-      - Key: StackId
-        Value: !Sub ${AWS::StackId}
+        - Key: Name
+          Value: Demo NAT Gateway 1
+        - Key: StackName
+          Value: !Sub ${AWS::StackName}
+        - Key: StackId
+          Value: !Sub ${AWS::StackId}
 
   NATGateway2:
     Type: AWS::EC2::NatGateway
@@ -230,65 +230,65 @@ Resources:
       SubnetId:
         Ref: PublicSubnet2
       Tags:
-      - Key: Name
-        Value: Demo NAT Gateway 2
-      - Key: StackName
-        Value: !Sub ${AWS::StackName}
-      - Key: StackId
-        Value: !Sub ${AWS::StackId}
+        - Key: Name
+          Value: Demo NAT Gateway 2
+        - Key: StackName
+          Value: !Sub ${AWS::StackName}
+        - Key: StackId
+          Value: !Sub ${AWS::StackId}
 
   NATGateway3:
     Type: AWS::EC2::NatGateway
     Properties:
       AllocationId:
         Fn::GetAtt:
-        - EIP3
-        - AllocationId
+          - EIP3
+          - AllocationId
       SubnetId:
         Ref: PublicSubnet3
       Tags:
-      - Key: Name
-        Value: Demo NAT Gateway 3
-      - Key: StackName
-        Value: !Sub ${AWS::StackName}
-      - Key: StackId
-        Value: !Sub ${AWS::StackId}
+        - Key: Name
+          Value: Demo NAT Gateway 3
+        - Key: StackName
+          Value: !Sub ${AWS::StackName}
+        - Key: StackId
+          Value: !Sub ${AWS::StackId}
 
   PrivateRouteTable1:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
       Tags:
-      - Key: Name
-        Value: Demo Private Route Table 1
-      - Key: StackName
-        Value: !Sub ${AWS::StackName}
-      - Key: StackId
-        Value: !Sub ${AWS::StackId}
+        - Key: Name
+          Value: Demo Private Route Table 1
+        - Key: StackName
+          Value: !Sub ${AWS::StackName}
+        - Key: StackId
+          Value: !Sub ${AWS::StackId}
 
   PrivateRouteTable2:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
       Tags:
-      - Key: Name
-        Value: Demo Private Route Table 2
-      - Key: StackName
-        Value: !Sub ${AWS::StackName}
-      - Key: StackId
-        Value: !Sub ${AWS::StackId}
+        - Key: Name
+          Value: Demo Private Route Table 2
+        - Key: StackName
+          Value: !Sub ${AWS::StackName}
+        - Key: StackId
+          Value: !Sub ${AWS::StackId}
 
   PrivateRouteTable3:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
       Tags:
-      - Key: Name
-        Value: Demo Private Route Table 3
-      - Key: StackName
-        Value: !Sub ${AWS::StackName}
-      - Key: StackId
-        Value: !Sub ${AWS::StackId}
+        - Key: Name
+          Value: Demo Private Route Table 3
+        - Key: StackName
+          Value: !Sub ${AWS::StackName}
+        - Key: StackId
+          Value: !Sub ${AWS::StackId}
 
   PrivateSubnetAssociation1:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -335,11 +335,14 @@ Resources:
       Scheme: internet-facing
       Type: "application"
       Subnets:
-      - !Ref PublicSubnet1
-      - !Ref PublicSubnet2
-      - !Ref PublicSubnet3
+        - !Ref PublicSubnet1
+        - !Ref PublicSubnet2
+        - !Ref PublicSubnet3
       SecurityGroups:
         - !GetAtt ELBSecurityGroup.GroupId
+      LoadBalancerAttributes:
+        - Key: routing.http.drop_invalid_header_fields.enabled
+          Value: true
       Tags:
         - Key: Name
           Value: Demo Application Load Balancer
@@ -366,14 +369,14 @@ Resources:
         HttpCode: '200'
       VpcId: !Ref VPC
       TargetGroupAttributes:
-      - Key: deregistration_delay.timeout_seconds
-        Value: 30
+        - Key: deregistration_delay.timeout_seconds
+          Value: 30
 
   ELBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     DependsOn:
-    - ELBApplicationLoadBalancer
-    - ELBTargetGroup
+      - ELBApplicationLoadBalancer
+      - ELBTargetGroup
     Properties:
       DefaultActions:
         - Type: forward
@@ -385,16 +388,16 @@ Resources:
   ELBListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     DependsOn:
-    - ELBListener
-    - ELBTargetGroup
+      - ELBListener
+      - ELBTargetGroup
     Properties:
       Actions:
-      - Type: forward
-        TargetGroupArn: !Ref ELBTargetGroup
+        - Type: forward
+          TargetGroupArn: !Ref ELBTargetGroup
       Conditions:
-      - Field: path-pattern
-        Values:
-        - "/*"
+        - Field: path-pattern
+          Values:
+          - "/*"
       ListenerArn: !Ref ELBListener
       Priority: 1
 
@@ -404,10 +407,10 @@ Resources:
       GroupDescription: Demo EC2 Security Group
       VpcId: !Ref VPC
       SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
-        SourcePrefixListId: !GetAtt CloudFrontPrefixListCustom.PrefixListId
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourcePrefixListId: !GetAtt CloudFrontPrefixListCustom.PrefixListId
       Tags:
         - Key: Name
           Value: Demo ELB Security Group
@@ -421,9 +424,9 @@ Resources:
     DependsOn: EC2LaunchTemplate
     Properties:
       VPCZoneIdentifier:
-      - !Ref PrivateSubnet1
-      - !Ref PrivateSubnet2
-      - !Ref PrivateSubnet3
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+        - !Ref PrivateSubnet3
       LaunchTemplate:
         LaunchTemplateId: !Ref EC2LaunchTemplate
         Version: !GetAtt EC2LaunchTemplate.LatestVersionNumber
@@ -465,16 +468,16 @@ Resources:
         IamInstanceProfile:
           Name: !Ref EC2InstanceProfile
         SecurityGroupIds:
-        - !GetAtt EC2SecurityGroup.GroupId
+          - !GetAtt EC2SecurityGroup.GroupId
         TagSpecifications:
-        - ResourceType: instance
-          Tags:
-          - Key: Name
-            Value: Demo EC2 Instance
-          - Key: StackName
-            Value: !Sub ${AWS::StackName}
-          - Key: StackId
-            Value: !Sub ${AWS::StackId}
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: Demo EC2 Instance
+              - Key: StackName
+                Value: !Sub ${AWS::StackName}
+              - Key: StackId
+                Value: !Sub ${AWS::StackId}
         UserData:
           Fn::Base64:
             !Sub |
@@ -556,7 +559,7 @@ Resources:
     Properties:
       Path: /
       Roles:
-      - !Ref EC2InstanceRole
+        - !Ref EC2InstanceRole
 
   S3Bucket:
     Type: AWS::S3::Bucket
@@ -573,11 +576,11 @@ Resources:
       Bucket: !Ref S3Bucket
       PolicyDocument:
         Statement:
-        - Action: s3:GetObject
-          Effect: Allow
-          Principal:
-            CanonicalUser: !GetAtt OriginAccessIdentity.S3CanonicalUserId
-          Resource: !Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket', /*]]
+          - Action: s3:GetObject
+            Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt OriginAccessIdentity.S3CanonicalUserId
+            Resource: !Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket', /*]]
 
   OriginAccessIdentity:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
@@ -591,23 +594,23 @@ Resources:
       DistributionConfig:
         Comment: 'Demo CloudFront Distribution'
         Origins:
-        - DomainName: !GetAtt S3Bucket.RegionalDomainName
-          Id: S3BucketOrigin
-          S3OriginConfig:
-            OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${OriginAccessIdentity}"
-        - DomainName: !GetAtt 'ELBApplicationLoadBalancer.DNSName'
-          Id: ELBApplicationLoadBalancerOrigin
-          CustomOriginConfig:
-            HTTPPort: '80'
-            OriginProtocolPolicy: 'http-only'
+          - DomainName: !GetAtt S3Bucket.RegionalDomainName
+            Id: S3BucketOrigin
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${OriginAccessIdentity}"
+          - DomainName: !GetAtt 'ELBApplicationLoadBalancer.DNSName'
+            Id: ELBApplicationLoadBalancerOrigin
+            CustomOriginConfig:
+              HTTPPort: '80'
+              OriginProtocolPolicy: 'http-only'
         Enabled: 'true'
         HttpVersion: http2
         DefaultRootObject: index.html
         DefaultCacheBehavior:
           Compress: 'true'
           AllowedMethods:
-          - GET
-          - HEAD
+            - GET
+            - HEAD
           TargetOriginId: S3BucketOrigin
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # managed cache policy id for CachingOptimized
           ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03 # managed headers policy id for SecurityHeadersPolicy
@@ -617,32 +620,32 @@ Resources:
               Forward: none
           ViewerProtocolPolicy: redirect-to-https
         CacheBehaviors:
-        - TargetOriginId: ELBApplicationLoadBalancerOrigin
-          Compress: 'true'
-          PathPattern: '/api'
-          ViewerProtocolPolicy: redirect-to-https
-          AllowedMethods:
-          - GET
-          - HEAD
-          CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # managed cache policy id for CachingDisabled
-          OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3 # managed origin request policy id for AllViewer
+          - TargetOriginId: ELBApplicationLoadBalancerOrigin
+            Compress: 'true'
+            PathPattern: '/api'
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+              - GET
+              - HEAD
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # managed cache policy id for CachingDisabled
+            OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3 # managed origin request policy id for AllViewer
         CustomErrorResponses:
-        - ErrorCode: '403'
-          ResponsePagePath: "/error.html"
-          ResponseCode: '200'
-          ErrorCachingMinTTL: '60'
-        - ErrorCode: '404'
-          ResponsePagePath: "/error.html"
-          ResponseCode: '200'
-          ErrorCachingMinTTL: '60'
-        - ErrorCode: '503'
-          ResponsePagePath: "/error.html"
-          ResponseCode: '200'
-          ErrorCachingMinTTL: '5'
-        - ErrorCode: '504'
-          ResponsePagePath: "/error.html"
-          ResponseCode: '200'
-          ErrorCachingMinTTL: '5'
+          - ErrorCode: '403'
+            ResponsePagePath: "/error.html"
+            ResponseCode: '200'
+            ErrorCachingMinTTL: '60'
+          - ErrorCode: '404'
+            ResponsePagePath: "/error.html"
+            ResponseCode: '200'
+            ErrorCachingMinTTL: '60'
+          - ErrorCode: '503'
+            ResponsePagePath: "/error.html"
+            ResponseCode: '200'
+            ErrorCachingMinTTL: '5'
+          - ErrorCode: '504'
+            ResponsePagePath: "/error.html"
+            ResponseCode: '200'
+            ErrorCachingMinTTL: '5'
       Tags:
         - Key: Name
           Value: Demo CloudFront Distribution
