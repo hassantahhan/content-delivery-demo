@@ -13,6 +13,10 @@ All web content is distributed using CloudFront to lower global user latency (th
 ![Screenshot](architecture.jpg)
 
 ## AWS Design
+The CloudFormation template provided will provision the follwing AWS design: 
+
+![Screenshot](design.jpg)
+
 The AWS design includes the follwing set of features: 
 - The CloudFront distribution requires HTTPS for communication between viewers and CloudFront by redirecting all HTTP requests to HTTPS. To avoid information exposure, CloudFront is configured with a custom error response behavior and a default root object, `index.html`. In addition, CloudFront forwards GET and HEAD requests to origins, since that's all what the application requires, but excludes other HTTP methods, the query string, and any cookies in viewer requests. 
 - The S3 bucket is configured with Public Access Block and has its bucket policy restrict to Origin Access Identity for CloudFront.
@@ -20,7 +24,10 @@ The AWS design includes the follwing set of features:
 - The Auto Scaling Group is configured across 3 Availability Zones with a minimum size of 3 instances and maximum size of 9 instances. The Auto Scaling group triggers scale-out or scale-in event when the average CPU utilization across all running instances is higher or lower than 70% over a period of five minutes. In addition, the Auto Scaling Group uses the Application Load Balancer health check to improve the application availability.
 - The EC2 instance type is EC2 M6g.large powered by Arm-based AWS Graviton2 processors which delivers up to 40% better price performance. EC2 user data is used to install and configure Express.js at instance launch time. The EC2 Security Group is restricted to port 80 and private IP address range.
 
-![Screenshot](design.jpg)
+The following AWS features will not be configured by the CloudFormation template provided, but they are highly recomended to be configured in production environments:
+- Enable access logs for CloudFront, S3, and Application Load Balancer; and VPC Flow Logs.
+- Enable deletion protection and redirection to HTTPS for the Application Load Balancer.
+- CloudFront distributions should have AWS WAF enabled and use custom SSL/TLS certificates.
 
 ## Deployment
 1. Use the provided `cloudformation-template.yaml` file to deploy a CloudFormation stack in your AWS region of choice. Make sure the latest AWS features used in template, such as EC2 M6g instances and CloudFront managed prefix lists, are supported in the selected AWS region.
