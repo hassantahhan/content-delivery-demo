@@ -50,4 +50,4 @@ for i in `seq 1 10`; do echo $i; curl -s -o /dev/null --write-out "size_download
 ```
 
 ## Cost
-The estimated daily cost for running this demonstration application is $10 USD. Assuming you be able to take advantage of CloudFront free usage tier and Auto Scaling Group size will remain 3 instances, you should expect to pay about $6 USD for compute services and $4 USD for networking services.
+The estimated daily cost for running this demonstration application is $7.5 USD. Assuming you be able to take advantage of CloudFront free usage tier and Auto Scaling Group size will remain 3 instances, you should expect to pay about $5.5 USD for compute and $2 USD for networking.
