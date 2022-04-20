@@ -567,7 +567,6 @@ Resources:
             - HEAD
           TargetOriginId: S3BucketOrigin
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # managed cache policy id for CachingOptimized
-          ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03 # managed headers policy id for SecurityHeadersPolicy
           ForwardedValues:
             QueryString: 'false'
             Cookies:
