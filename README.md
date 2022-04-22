@@ -5,6 +5,7 @@ This repository demonstrates how to accelerate distribution of your static and d
 CloudFront is used to distribute the content of a single-page application to lower user latency (the time it takes to load the first byte of a web file) and achieve higher data transfer rates. A static webpage is backed by a simple Express.js application that listens to HTTP requests and sends back a JSON response that includes the server timestamp and HTTP headers received in the request. The application content can be divided into two parts: static content hosted on S3 and dynamic content hosted on EC2. The AWS design of this application leverages a set of CloudFront, S3, and EC2 features to achieve high availability, scalability, and security objectives.
 
 ![Screenshot](architecture.jpg)
+
 ## AWS Design
 The AWS design includes the follwing set of features: 
 - The CloudFront distribution requires HTTPS for communication between viewers and CloudFront by redirecting all HTTP requests to HTTPS. To avoid information exposure, CloudFront is configured with a custom error response behavior and a default root object, `index.html`. In addition, CloudFront forwards GET and HEAD requests only to origins, since that's all what the application requires, and excludes other HTTP methods, the query string, and any cookies in viewer requests. 
@@ -12,6 +13,7 @@ The AWS design includes the follwing set of features:
 - The Application Load Balancer is configured across 3 Availability Zones with HTTP-based health check for the target group. The Security Group of the Application Load Balance is restricted to AWS-managed prefix list for Amazon CloudFront using CloudFormation custom resources.
 - EC2 Auto Scaling is configured to offer dynamic scaling across 3 Availability Zones, triggering a scale-out or scale-in event when the average CPU utilization of all running instances is higher or lower than 70% over a period of five minutes. The Auto Scaling group size has a minimum size of 3 instances and maximum size of 9 instances. In addition, the Auto Scaling Group uses the Application Load Balancer health check to improve the application availability.
 - The EC2 instance type is EC2 M6g.large powered by Arm-based AWS Graviton2 processors which delivers up to 40% better price performance. EC2 user data is used to install and configure Express.js at instance launch time. The EC2 Security Group is restricted to port 80 and private IP address range.
+- EC2 instances are deployed in private subnets and are not reachable from the Internet. A NAT Gateway is used to connect the EC2 instances to the Internet to install the required software packages.
 
 The following features will not be configured by the CloudFormation template provided. However, they are highly recomended for production environments:
 - Enable deletion protection and redirection to HTTPS for the Application Load Balancer.
