@@ -14,6 +14,8 @@ The AWS design includes the follwing set of features:
 - EC2 Auto Scaling is configured to offer dynamic scaling across 3 Availability Zones, triggering a scale-out or scale-in event when the average CPU utilization of all running instances is higher or lower than 70% over a period of five minutes. The Auto Scaling group size has a minimum size of 3 instances and maximum size of 9 instances. In addition, the Auto Scaling Group uses the Application Load Balancer health check to improve the application availability.
 - The EC2 instance type is EC2 M6g.large powered by Arm-based AWS Graviton2 processors which delivers up to 40% better price performance. EC2 user data is used to install and configure Express.js at instance launch time. The EC2 instances will be deployed in private subnets and are not reachable from the Internet. A NAT Gateway is used to connect the EC2 instances to the Internet to install the required software packages. In addition, the EC2 Security Group is restricted to port 80 and the VPC private IP range.
 
+![Screenshot](content/design.png)
+
 The following features will not be configured by the CloudFormation template provided. However, they are highly recomended for production environments:
 - Enable deletion protection and redirection to HTTPS for the Application Load Balancer.
 - Enable access logs for CloudFront, S3, and Application Load Balancer; and VPC Flow Logs.
