@@ -5,7 +5,6 @@ This repository demonstrates how to accelerate your static and dynamic web conte
 All web content is distributed using CloudFront to lower global user latency (the time it takes to load the first byte of the file) and achieve higher data transfer rates. The application content can be divided into two parts: static content hosted on S3 and dynamic content hosted on EC2. The static webpage is backed by a simple Express.js application that listens to HTTP requests and sends back a JSON response that includes the server timestamp and HTTP headers received in the request.
 
 ![Screenshot](architecture.jpg)
-
 ## AWS Design
 The AWS design includes the follwing set of features: 
 - The CloudFront distribution requires HTTPS for communication between viewers and CloudFront by redirecting all HTTP requests to HTTPS. To avoid information exposure, CloudFront is configured with a custom error response behavior and a default root object, `index.html`. In addition, CloudFront forwards GET and HEAD requests to origins, since that's all what the application requires, but excludes other HTTP methods, the query string, and any cookies in viewer requests. 
