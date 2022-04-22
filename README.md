@@ -7,7 +7,7 @@ CloudFront is used to distribute the content of a single-page application to low
 ![Screenshot](architecture.jpg)
 
 ## AWS Design
-The provided template will launch AWS resources into a VPC which resembles a traditional data center network. EC2 instances are associated with an EC2 Auto Scaling to maintain application availability by checking the health of the application nodes (fleet management) and responding to changes in demand (dynamic scaling). S3 is an object storage layer used to storage static content. CloudFront global network infrastructure supporting edge termination is used to reach viewers across the globe and optimize web content delivery.
+The provided template will launch AWS resources into a VPC which resembles a traditional data center network. EC2 instances are associated with an EC2 Auto Scaling to maintain application availability by checking the health of the application nodes (fleet management) and responding to changes in demand (dynamic scaling). An ALB is used to automatically distribute incoming traffic across multiple EC2 instances. S3 is the object storage layer used to storage static content. CloudFront global network infrastructure supporting edge termination is used to reach viewers across the globe and optimize web content delivery.
 
 ![Screenshot](content/design.png)
 
