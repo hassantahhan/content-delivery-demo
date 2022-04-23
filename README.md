@@ -21,8 +21,8 @@ The AWS design includes the follwing set of features:
 The following features will not be configured by the CloudFormation template provided. However, they are highly recomended for production environments:
 - Enable deletion protection and redirection to HTTPS for the Application Load Balancer.
 - Enable access logs for CloudFront, S3, and Application Load Balancer; and VPC Flow Logs.
-- CloudFront distributions should have AWS WAF enabled and use custom SSL/TLS certificates.
-- Create a NAT Gateway in each Availability Zone to have fault-tolerance against AZ failures.
+- CloudFront distributions should have AWS WAF enabled and should use custom SSL/TLS certificates.
+- Create a NAT Gateway in each Availability Zone to have fault-tolerance against Availability Zone (AZ) failures.
 
 ## Deployment
 1. Use the provided `cloudformation-template.yaml` file to deploy a CloudFormation stack in your AWS region of choice. Make sure the latest AWS features used in template, such as EC2 M6g instances and CloudFront managed prefix lists, are supported in the selected AWS region.
