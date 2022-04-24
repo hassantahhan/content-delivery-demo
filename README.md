@@ -29,7 +29,7 @@ The following features will not be configured by the CloudFormation template pro
 2. Once the CloudFormation stack is created successfully, click on the **Outputs** tab which enables you to get access to information about resources within the stack.
 3. Go to the S3 console to identify the S3 bucket which should store your static content. Upload the files provided in the `content` directory to the S3 bucket.
 4. Go to the EC2 console to check if the EC2 instances created by CloudFormation finished initializing and entered the running state.  
-5. Click on the CloudFront distribution domain name to access all content of your website. The static content is avaialble under `https://xxxxxxxxxxxx.cloudfront.net/index.html` while the dynamic content is available under https://xxxxxxxxxxxx.cloudfront.net/api`.  
+5. Click on the CloudFront distribution domain name to access all content of your website. The static content is avaialble under `https://xxxxxxxxxxxx.cloudfront.net/index.html` while the dynamic content is available under 'https://xxxxxxxxxxxx.cloudfront.net/api`.  
 
 ## Testing
 To test if the distribution is ready to be used in your region, you can use the following 'nslookup` command to lookup the CloudFront distribution domain name and observe that CloudFront returns multiple IPs for each DNS query.
