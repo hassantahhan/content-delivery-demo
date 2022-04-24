@@ -37,7 +37,7 @@ To test if the distribution is ready to be used in your region, you can use the 
 nslookup xxxxxxxxxxxx.cloudfront.net
 ```
 
-To check the average start transfer time of the application endpoint, you can use the commands below:
+To check the average load time and time to first byte, you can use the commands below:
 - Using Windows command prompt:
 ```
 for /L %i in (1,1,10) do @echo %i && curl -s -o NUL --write-out "round-trip-time: %{time_total} // first-byte-time: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net
