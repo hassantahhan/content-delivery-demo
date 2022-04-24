@@ -29,12 +29,18 @@ The following features will not be configured by the CloudFormation template pro
 2. Once the CloudFormation stack is created successfully, click on the **Outputs** tab which enables you to get access to information about resources within the stack.
 3. Go to the S3 console to identify the S3 bucket which should store your static content. Upload the files provided in the `content` directory to the S3 bucket.
 4. Go to the EC2 console to check if the EC2 instances created by CloudFormation finished initializing and entered the running state.  
-5. Click on the CloudFront distribution domain name to access all content of your website. The static content is avaialble under `/index.html` while the dynamic content is available under `/api`.  
+5. Click on the CloudFront distribution domain name to access all content of your website. The static content is avaialble under `https://xxxxxxxxxxxx.cloudfront.net/index.html` while the dynamic content is available under https://xxxxxxxxxxxx.cloudfront.net/api`.  
 
 ## Testing
-To test if the distribution is ready to be used in your region, you can use the `nslookup xxxxxxxxxxxx.cloudfront.net` command to lookup the CloudFront distribution domain name. You should be able to observe that CloudFront returns multiple IPs for each DNS query.
+To test if the distribution is ready to be used in your region, you can use the following 'nslookup` command to lookup the CloudFront distribution domain name and observe that CloudFront returns multiple IPs for each DNS query.
+```
+nslookup xxxxxxxxxxxx.cloudfront.net
+```
 
-To check the average start transfer time of the application endpoint, you can use the commands below:
+The browser developer tools, such as [Chrome](https://developer.chrome.com/docs/devtools/network/) and [Firefox](https://firefox-source-docs.mozilla.org/devtools-user/index.html) network panels, can be an effective way to inspect website latency and understand load performance. 
+
+
+To check the average start transfer time of the application endpoint, you can also use the commands below:
 - Using Windows command prompt:
 ```
 for /L %i in (1,1,10) do @echo %i && curl -s -o NUL --write-out "size_download: %{size_download} // time_total: %{time_total} // time_starttransfer: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net
@@ -43,6 +49,8 @@ for /L %i in (1,1,10) do @echo %i && curl -s -o NUL --write-out "size_download: 
 ```
 for i in `seq 1 10`; do echo $i; curl -s -o /dev/null --write-out "size_download: %{size_download} // time_total: %{time_total} // time_starttransfer: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net; done
 ```
+
+Another option is enabling [Amazon CloudFront Server Timing headers](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/understanding-response-headers-policies.html#server-timing-header), offering detailed performance information, such as whether content was served from cache, how the request was routed, and how much time elapsed as observed by CloudFront.
 
 ## Cost
 The estimated daily cost for running this demonstration application is $7.5 USD. Assuming you be able to take advantage of CloudFront and S3 free usage tiers and Auto Scaling group size will not go above 3 instances, you should expect to pay about $5.5 USD for compute and $2 USD for networking.
