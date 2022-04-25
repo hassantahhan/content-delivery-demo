@@ -40,11 +40,11 @@ nslookup xxxxxxxxxxxx.cloudfront.net
 To check the average round trip time versus time to first byte, you can use the commands below:
 - Using Windows command prompt:
 ```
-for /L %i in (1,1,10) do @echo %i && curl -s -o NUL --write-out "round-trip-time: %{time_total} // first-byte-time: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net
+for /L %i in (1,1,10) do @echo %i && curl -s -o NUL -w "full-load-time: %{time_total} // time-to-first-byte: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net
 ```
 - Using Linux bash shell: 
 ```
-for i in `seq 1 10`; do echo $i; curl -s -o /dev/null --write-out "round-trip-time: %{time_total} // first-byte-time: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net; done
+for i in `seq 1 10`; do echo $i; curl -s -o /dev/null -w "full-load-time: %{time_total} // time-to-first-byte: %{time_starttransfer}\n" https://xxxxxxxxxxxx.cloudfront.net; done
 ```
 
 Browser developer tools, such as [Chrome](https://developer.chrome.com/docs/devtools/network/) and [Firefox](https://firefox-source-docs.mozilla.org/devtools-user/index.html) network panels, offer a developer-friendly way to inspect website latency and understand load performance. The browser developer tools can be combined with enabling [Amazon CloudFront Server Timing headers](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/understanding-response-headers-policies.html#server-timing-header), which provide detailed performance information, such as whether content was served from cache, how the request was routed, and how much time was observed by CloudFront at each caching stage.
