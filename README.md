@@ -32,7 +32,7 @@ The following features will not be configured by the CloudFormation template pro
 5. Click on the CloudFront distribution domain name to access all content of your website. The static content is avaialble under `https://xxxxxxxxxxxx.cloudfront.net/index.html` while the dynamic content is available under `https://xxxxxxxxxxxx.cloudfront.net/api`.  
 
 ## Testing
-To test if the distribution is ready to be used in your region, you can use the following 'nslookup` command to query the CloudFront distribution domain name and observe how CloudFront returns multiple IPs for each DNS query.
+To test if the distribution is ready to be used in your region, you can use the following 'nslookup` command to query the CloudFront distribution domain name and observe how CloudFront returns multiple IP addresses.
 ```
 nslookup xxxxxxxxxxxx.cloudfront.net
 ```
