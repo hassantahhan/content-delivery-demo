@@ -11,7 +11,7 @@ The provided template will launch AWS resources into a VPC which resembles a tra
 
 ![Screenshot](content/design.png)
 
-The AWS design includes the follwing set of features: 
+The AWS design includes the following set of features: 
 - The CloudFront distribution requires HTTPS for communication between viewers and CloudFront by redirecting all HTTP requests to HTTPS. To avoid information exposure, CloudFront is configured with a custom error response behavior and a default root object, `index.html`. In addition, CloudFront forwards GET and HEAD requests only to origins, since that's all what the application requires, and excludes other HTTP methods, the query string, and any cookies in viewer requests. 
 - The S3 bucket is configured with Block Public Access and has its bucket policy restrict to Origin Access Identity for CloudFront.
 - The Application Load Balancer is configured across 3 Availability Zones with HTTP-based health check for the target group. The Security Group of the Application Load Balance is restricted to AWS-managed prefix list for Amazon CloudFront using CloudFormation custom resources.
