@@ -728,9 +728,9 @@ Resources:
           Value: !Sub ${AWS::StackId}
 
 Outputs:
-  CloudFrontDomainName:
-    Value: !GetAtt CloudFrontDistribution.DomainName
-    Description: CloudFront domain name
+  CloudFrontConsole:
+    Value: !Sub 'https://console.aws.amazon.com/cloudfront/v3/home?region=${AWS::Region}#/distributions/${CloudFrontDistribution}'
+    Description: CloudFront Console
   CloudFrontStaticContentURL:
     Value: !Sub '${CloudFrontDistribution.DomainName}/index.html'
     Description: CloudFront static content URL
