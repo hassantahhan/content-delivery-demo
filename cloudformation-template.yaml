@@ -530,17 +530,24 @@ Resources:
       Bucket: !Ref S3Bucket
       PolicyDocument:
         Statement:
-          - Action: s3:GetObject
-            Effect: Allow
+          - Effect: Allow
             Principal:
-              CanonicalUser: !GetAtt OriginAccessIdentity.S3CanonicalUserId
+              Service: 'cloudfront.amazonaws.com'
+            Action: s3:GetObject
             Resource: !Join ['', ['arn:aws:s3:::', !Ref 'S3Bucket', /*]]
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}'
 
-  OriginAccessIdentity:
-    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
     Properties:
-      CloudFrontOriginAccessIdentityConfig:
-        Comment: 'Demo CloudFront Origin Access Identity'
+      OriginAccessControlConfig:
+        Description: 'Demo CloudFront Origin Access Control'
+        Name: !Sub ${AWS::StackName}-DemoOAC
+        OriginAccessControlOriginType: 's3'
+        SigningBehavior: 'always'
+        SigningProtocol: 'sigv4'
 
   CloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
@@ -551,7 +558,8 @@ Resources:
           - DomainName: !GetAtt S3Bucket.RegionalDomainName
             Id: S3BucketOrigin
             S3OriginConfig:
-              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${OriginAccessIdentity}"
+              OriginAccessIdentity: ''
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
           - DomainName: !GetAtt 'ELBApplicationLoadBalancer.DNSName'
             Id: ELBApplicationLoadBalancerOrigin
             CustomOriginConfig:
